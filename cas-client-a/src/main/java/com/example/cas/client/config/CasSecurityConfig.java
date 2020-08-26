@@ -61,7 +61,7 @@ public class CasSecurityConfig {
         provider.setServiceProperties(serviceProperties());
         provider.setTicketValidator(ticketValidator());
         provider.setUserDetailsService(userDetailService);
-        // provider.setKey("");
+        provider.setKey("client");
         return provider;
     }
 

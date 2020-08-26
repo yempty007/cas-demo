@@ -1,5 +1,5 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   org.apereo.cas.config.CasEmbeddedContainerTomcatConfiguration,\
   org.apereo.cas.config.CasEmbeddedContainerTomcatFiltersConfiguration,\
-  net.wertop.cas.controller.ServiceController
+  com.example.cas.server.controller.ServiceController
 

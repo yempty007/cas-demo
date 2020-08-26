@@ -1,6 +1,6 @@
 {
   "@class": "org.apereo.cas.services.RegexRegisteredService",
-  "serviceId": "^(https|http)://b.ssoclient.com:8082/*",
+  "serviceId": "^(https|http)://b.casclient.com:8082/.*",
   "name": "client-b",
   "id": 100002,
   "description": "客户端-B 的定义信息",
