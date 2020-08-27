@@ -3,6 +3,7 @@ package com.example.cas.server.controller;
 import com.example.cas.server.entity.ReturnMessage;
 import org.apereo.cas.services.RegexRegisteredService;
 import org.apereo.cas.services.RegisteredService;
+import org.apereo.cas.services.ReturnAllowedAttributeReleasePolicy;
 import org.apereo.cas.services.ServicesManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Description ServiceController
@@ -49,6 +52,14 @@ public class ServiceController {
             try {
                 String realServiceId = "^" + url + ".*";
                 RegexRegisteredService service = new RegexRegisteredService();
+                // 允许返回字段
+                ReturnAllowedAttributeReleasePolicy policy = new ReturnAllowedAttributeReleasePolicy();
+                List<String> attributes =new ArrayList<>();
+                attributes.add("id");
+                attributes.add("create_time");
+                policy.setAllowedAttributes(attributes);
+
+                service.setAttributeReleasePolicy(policy);
                 service.setServiceId(realServiceId);
                 service.setId(id);
                 service.setName(url);

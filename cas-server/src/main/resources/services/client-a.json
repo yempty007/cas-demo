@@ -4,5 +4,8 @@
   "name": "client-a",
   "id": 100001,
   "description": "客户端-A 的定义信息",
-  "evaluationOrder": 1
+  "evaluationOrder": 1,
+  "attributeReleasePolicy": {
+    "@class": "org.apereo.cas.services.ReturnAllAttributeReleasePolicy"
+  }
 }

@@ -55,6 +55,9 @@
                             <artifactId>cas-server-webapp${app.server}</artifactId>
                         </overlay>
                     </overlays>
+                    <dependentWarExcludes>
+                        **/services/*.json
+                    </dependentWarExcludes>
                 </configuration>
             </plugin>
             <plugin>
@@ -144,6 +147,12 @@
                     <artifactId>cas-server-core-services-api</artifactId>
                     <version>${cas.version}</version>
                 </dependency>
+                <!--为了自定义返回字段-->
+                <dependency>
+                    <groupId>org.apereo.cas</groupId>
+                    <artifactId>cas-server-core-authentication-attributes</artifactId>
+                    <version>${cas.version}</version>
+                </dependency>
                 <!--开启cas server的rest支持-->
                 <dependency>
                     <groupId>org.apereo.cas</groupId>
@@ -153,6 +162,11 @@
                 <!--
                 ...Additional dependencies may be placed here...
                 -->
+                <dependency>
+                    <groupId>com.fasterxml</groupId>
+                    <artifactId>classmate</artifactId>
+                    <version>1.5.1</version>
+                </dependency>
             </dependencies>
         </profile>
 
