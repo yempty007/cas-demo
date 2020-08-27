@@ -11,6 +11,7 @@
 	<modules>
 		<module>cas-client-a</module>
 		<module>cas-client-b</module>
+		<module>cas-sample-java-webapp</module>
 		<module>cas-server</module>
 	</modules>
 
