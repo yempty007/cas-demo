@@ -19,7 +19,7 @@ public class AppConstant {
     public static final String CAS_SERVER_LOGOUT = CAS_SERVER_PREFIX + "/logout";
 
     public static final String CAS_CLIENT_PREFIX = "http://b.casclient.com:8082";
-    public static final String CAS_CLIENT_LOGIN = CAS_CLIENT_PREFIX + "/login";
-    public static final String CAS_CLIENT_LOGOUT = CAS_CLIENT_PREFIX + "/logout";
+    public static final String CAS_CLIENT_LOGIN = CAS_CLIENT_PREFIX + "/login/cas";
+    public static final String CAS_CLIENT_LOGOUT = CAS_CLIENT_PREFIX + "/logout/cas";
 
 }

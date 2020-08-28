@@ -7,13 +7,13 @@ import cn.hutool.http.Header;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.http.Method;
-import cn.hutool.json.JSONUtil;
+import com.example.cas.client.b.constant.AppConstant;
 import com.example.cas.client.b.entity.SsoUserInfo;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
+import javax.xml.xpath.XPathConstants;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @Description CasRequestUtils
@@ -22,14 +22,11 @@ import java.util.Map;
  */
 public class CasRequestUtils {
 
-    private static final String CAS_SERVER_URL = "http://cas.server.com:8080/cas/";
-    private static final String CLIENT_SERVER_URL = "http://a.casclient.com:8081/";
-
     public static String getTgtTicket(String username, String password) {
         HashMap<String, Object> params = new HashMap<>(MapUtil.DEFAULT_INITIAL_CAPACITY);
         params.put("username", username);
         params.put("password", password);
-        HttpResponse response = HttpUtil.createPost(CAS_SERVER_URL + "/v1/tickets").form(params).execute();
+        HttpResponse response = HttpUtil.createPost(AppConstant.CAS_CLIENT_PREFIX + "/v1/tickets").form(params).execute();
         String location = response.header(Header.LOCATION);
         System.out.println(location);
         return location;
@@ -37,7 +34,7 @@ public class CasRequestUtils {
 
     public static String getStTicket(String url) {
         HashMap<String, Object> params = new HashMap<>(MapUtil.DEFAULT_INITIAL_CAPACITY);
-        params.put("service", CLIENT_SERVER_URL);
+        params.put("service", AppConstant.CAS_CLIENT_PREFIX);
         String body = HttpUtil.post(url, params);
         System.out.println(body);
         return body;
@@ -45,29 +42,31 @@ public class CasRequestUtils {
 
     public static SsoUserInfo checkStTicket(String stTicket) throws Exception {
         HashMap<String, Object> params = new HashMap<>(MapUtil.DEFAULT_INITIAL_CAPACITY);
-        params.put("service", CLIENT_SERVER_URL);
+        params.put("service", AppConstant.CAS_CLIENT_LOGIN);
         params.put("ticket", stTicket);
-        String body = HttpUtil.get(CAS_SERVER_URL + "/p3/serviceValidate", params);
+        String body = HttpUtil.get(AppConstant.CAS_SERVER_PREFIX + "/p3/serviceValidate", params);
         System.out.println(body);
 
+        XmlUtil.setNamespaceAware(false);
         Document document = XmlUtil.readXML(body);
-        String error = XmlUtil.elementText(document.getDocumentElement(), "authenticationFailure");
+        String error = (String) XmlUtil.getByXPath("/serviceResponse/authenticationFailure", document, XPathConstants.STRING);
         if (StrUtil.isNotBlank(error)) {
             throw new Exception("TicketValidationException");
         } else {
-            String principal = XmlUtil.elementText(document.getDocumentElement(), "user");
+            String principal = (String) XmlUtil.getByXPath("/serviceResponse/authenticationSuccess/user", document, XPathConstants.STRING);
             if (StrUtil.isBlank(principal)) {
                 throw new Exception("No principal was found in the response from the CAS server.");
             } else {
-                // XmlUtil.xmlToMap()
+                String username = (String) XmlUtil.getByXPath("/serviceResponse/authenticationSuccess/attributes/username", document, XPathConstants.STRING);
+                String idString = (String) XmlUtil.getByXPath("/serviceResponse/authenticationSuccess/attributes/id", document, XPathConstants.STRING);
+
+                return new SsoUserInfo(Long.parseLong(idString), username);
             }
         }
-        SsoUserInfo ssoUserInfo = JSONUtil.toBean(body, SsoUserInfo.class);
-        return ssoUserInfo;
     }
 
     public static void destroyTgtTicket(String tgtTicket) {
-        HttpUtil.createRequest(Method.DELETE, CAS_SERVER_URL + "/v1/tickets" + tgtTicket).execute();
+        HttpUtil.createRequest(Method.DELETE, AppConstant.CAS_CLIENT_PREFIX + "/v1/tickets" + tgtTicket).execute();
     }
 
     public static void main(String[] args) {
@@ -93,23 +92,18 @@ public class CasRequestUtils {
                 "\t</cas:authenticationSuccess>\n" +
                 "</cas:serviceResponse>";
 
+        body = StrUtil.replace(body, StrUtil.TAB, StrUtil.EMPTY);
+        body = StrUtil.replace(body, StrUtil.LF, StrUtil.EMPTY);
+
         XmlUtil.setNamespaceAware(false);
         Document document = XmlUtil.parseXml(body);
-        Element documentElement = document.getDocumentElement();
 
-        Map<String, Object> bodyMap = XmlUtil.xmlToMap(body);
-        if (bodyMap.containsKey("cas:authenticationFailure")) {
-            System.out.println("authenticationFailure");
-        } else if (bodyMap.containsKey("cas:authenticationSuccess")) {
-            Map<String, Object> successMap = (Map<String, Object>) bodyMap.get("cas:authenticationSuccess");
-            if (!successMap.containsKey("cas:user") || StrUtil.isBlank(successMap.get("cas:user").toString())) {
-                System.out.println("no principal");
-            } else {
+        Node authenticationSuccess = (Node) XmlUtil.getByXPath("/serviceResponse/authenticationSuccess", document, XPathConstants.NODE);
+        Node authenticationFailure = (Node) XmlUtil.getByXPath("/serviceResponse/authenticationFailure", document, XPathConstants.NODE);
+        Object user = XmlUtil.getByXPath("/serviceResponse/authenticationSuccess/user", document, XPathConstants.STRING);
+        Object attributesNode = XmlUtil.getByXPath("/serviceResponse/authenticationSuccess/attributes", document, XPathConstants.NODE);
 
-            }
-        } else {
-            System.out.println("error");
-        }
 
+        System.out.println("over");
     }
 }
