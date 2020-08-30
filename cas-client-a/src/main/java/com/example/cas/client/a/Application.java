@@ -1,4 +1,4 @@
-package com.example.cas.client;
+package com.example.cas.client.a;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,4 +1,4 @@
-package com.example.cas.client.handle;
+package com.example.cas.client.a.handle;
 
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.authority.AuthorityUtils;

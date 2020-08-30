@@ -15,7 +15,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
- * @Description
+ * @Description 登录过滤器
  * @Author yempty
  * @Date 2020/8/27 21:50
  * @Version 1.0
@@ -25,6 +25,9 @@ public class AuthenticationFilter implements Filter {
 
     private static final Log log = LogFactory.get();
 
+    /**
+     * 登录校验白名单
+     */
     private static final String[] excludedUrl = {"/login/**", "/logout/**", "/hello"};
 
     @Override

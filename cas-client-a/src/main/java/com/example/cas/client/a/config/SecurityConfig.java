@@ -1,4 +1,4 @@
-package com.example.cas.client.config;
+package com.example.cas.client.a.config;
 
 import org.jasig.cas.client.session.SingleSignOutFilter;
 import org.springframework.beans.factory.annotation.Autowired;

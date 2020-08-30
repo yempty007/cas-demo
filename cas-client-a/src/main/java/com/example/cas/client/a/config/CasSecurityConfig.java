@@ -1,7 +1,7 @@
-package com.example.cas.client.config;
+package com.example.cas.client.a.config;
 
-import com.example.cas.client.properties.CASClientProperties;
-import com.example.cas.client.properties.CASServerProperties;
+import com.example.cas.client.a.properties.CASClientProperties;
+import com.example.cas.client.a.properties.CASServerProperties;
 import org.jasig.cas.client.session.SingleSignOutFilter;
 import org.jasig.cas.client.validation.Cas20ProxyTicketValidator;
 import org.jasig.cas.client.validation.TicketValidator;
