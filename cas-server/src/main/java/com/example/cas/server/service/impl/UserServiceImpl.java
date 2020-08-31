@@ -26,6 +26,7 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
@@ -38,7 +39,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO findByUsername(String username) {
-        return userRepository.findByUsername(username);
+        User user = userRepository.findByUsername(username);
+        UserDTO userDTO = ConvertUtil.sourceToTarget(user, UserDTO.class);
+        return userDTO;
     }
 
     @Override

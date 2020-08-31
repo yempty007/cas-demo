@@ -1,10 +1,10 @@
 package com.example.cas.server.repository;
 
-import com.example.cas.server.dto.UserDTO;
 import com.example.cas.server.entity.User;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
  * @Date 2020/8/31 15:17
  */
 @Repository
-public interface UserRepository extends PagingAndSortingRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
 
     /**
      * 根据用户名获取用户
@@ -21,8 +21,8 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
      * @param username 用户名
      * @return
      */
-    @Query("select id,username,locked,create_time from cas_user where username=:username")
-    UserDTO findByUsername(String username);
+    @Query("select id,username,locked,createTime from User where username=:username")
+    User findByUsername(@Param("username") String username);
 
     /**
      * 更改锁定状态
@@ -31,6 +31,6 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
      * @param status 状态值
      */
     @Modifying
-    @Query("update cas_user set locked=:status where id=:id")
-    void changeLockedStatus(Long id, Integer status);
+    @Query("update User set locked=:status where id=:id")
+    void changeLockedStatus(@Param("id") Long id, @Param("status") Integer status);
 }

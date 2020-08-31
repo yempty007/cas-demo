@@ -77,7 +77,9 @@
 
         <mainClassName>org.springframework.boot.loader.WarLauncher</mainClassName>
         <isExecutable>false</isExecutable>
-        <manifestFileToUse>${project.build.directory}/war/work/org.apereo.cas/cas-server-webapp${app.server}/META-INF/MANIFEST.MF</manifestFileToUse>
+        <manifestFileToUse>
+            ${project.build.directory}/war/work/org.apereo.cas/cas-server-webapp${app.server}/META-INF/MANIFEST.MF
+        </manifestFileToUse>
 
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -165,11 +167,23 @@
                 <dependency>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-data-jpa</artifactId>
-                    <version>1.5.1.RELEASE</version>
+                    <version>${springboot.version}</version>
                     <exclusions>
                         <exclusion>
                             <groupId>ch.qos.logback</groupId>
-                            <artifactId>logback-core</artifactId>
+                            <artifactId>logback-classic</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.hibernate</groupId>
+                            <artifactId>hibernate-core</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.hibernate</groupId>
+                            <artifactId>hibernate-entitymanager</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.springframework.data</groupId>
+                            <artifactId>spring-data-commons</artifactId>
                         </exclusion>
                     </exclusions>
                 </dependency>
