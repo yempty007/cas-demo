@@ -163,6 +163,17 @@
                 ...Additional dependencies may be placed here...
                 -->
                 <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-data-jpa</artifactId>
+                    <version>1.5.1.RELEASE</version>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>ch.qos.logback</groupId>
+                            <artifactId>logback-core</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+                <dependency>
                     <groupId>com.fasterxml</groupId>
                     <artifactId>classmate</artifactId>
                     <version>1.5.1</version>

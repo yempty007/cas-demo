@@ -1,10 +1,7 @@
 package com.example.cas.server.controller;
 
-import com.example.cas.server.entity.ReturnMessage;
-import org.apereo.cas.services.RegexRegisteredService;
-import org.apereo.cas.services.RegisteredService;
-import org.apereo.cas.services.ReturnAllAttributeReleasePolicy;
-import org.apereo.cas.services.ServicesManager;
+import com.example.cas.server.common.result.Result;
+import org.apereo.cas.services.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,22 +33,21 @@ public class ServiceController {
      * @return
      */
     @PostMapping("/{protocol}/{serviceId}/{id}")
-    public Object addClient(@PathVariable("protocol") String protocol,
-                            @PathVariable("serviceId") String serviceId,
-                            @PathVariable("id") int id) {
-        ReturnMessage returnMessage = new ReturnMessage();
+    public Result<String> addClient(@PathVariable("protocol") String protocol,
+                                    @PathVariable("serviceId") String serviceId,
+                                    @PathVariable("id") int id) {
+        Result<String> result = null;
         String url = protocol + "://" + serviceId;
         RegisteredService svc = servicesManager.findServiceBy(url);
         if (svc != null) {
             logger.error("注册service异常,此地址已注册");
-            returnMessage.setCode(500);
-            returnMessage.setMessage("添加失败");
+            result = Result.error("添加服务失败!此地址已注册!");
         } else {
             try {
                 String realServiceId = "^" + url + ".*";
                 RegexRegisteredService service = new RegexRegisteredService();
 
-                ReturnAllAttributeReleasePolicy policy=new ReturnAllAttributeReleasePolicy();
+                ReturnAllAttributeReleasePolicy policy = new ReturnAllAttributeReleasePolicy();
                 service.setAttributeReleasePolicy(policy);
                 // 允许返回字段
                 // ReturnAllowedAttributeReleasePolicy policy = new ReturnAllowedAttributeReleasePolicy();
@@ -59,7 +55,8 @@ public class ServiceController {
                 // attributes.add("id");
                 // attributes.add("create_time");
                 // policy.setAllowedAttributes(attributes);
-
+                RegisteredServicePublicKey publicKey = new RegisteredServicePublicKeyImpl("E:\\public.txt", "RSA");
+                service.setPublicKey(publicKey);
                 service.setAttributeReleasePolicy(policy);
                 service.setServiceId(realServiceId);
                 service.setId(id);
@@ -70,15 +67,13 @@ public class ServiceController {
                 // 执行load让他生效
                 servicesManager.load();
 
-                returnMessage.setCode(200);
-                returnMessage.setMessage("添加成功");
+                result = Result.okMsg("添加服务成功!");
             } catch (Exception e) {
                 logger.error("注册service异常", e);
-                returnMessage.setCode(500);
-                returnMessage.setMessage("添加失败");
+                result = Result.error("添加服务失败!");
             }
         }
-        return returnMessage;
+        return result;
     }
 
     /**
@@ -88,8 +83,9 @@ public class ServiceController {
      * @return
      */
     @DeleteMapping("/{serviceId}")
-    public Object deleteClient(@PathVariable("serviceId") String serviceId) {
-        ReturnMessage returnMessage = new ReturnMessage();
+    public Result<String> deleteClient(@PathVariable("serviceId") String serviceId) {
+
+        Result<String> result = null;
 
         RegisteredService service = servicesManager.findServiceBy(serviceId);
         if (service != null) {
@@ -98,20 +94,15 @@ public class ServiceController {
                 // 执行load生效
                 servicesManager.load();
 
-                returnMessage.setCode(200);
-                returnMessage.setMessage("删除成功");
-                return returnMessage;
+                result = Result.error("删除service成功!");
             } catch (Exception e) {
                 logger.error("删除service异常", e);
-                returnMessage.setCode(500);
-                returnMessage.setMessage("删除失败");
-                return returnMessage;
+                result = Result.error("删除service异常!");
             }
         } else {
-            returnMessage.setCode(500);
-            returnMessage.setMessage("删除失败,服务不存在");
-            return returnMessage;
+            result = Result.error("删除service失败!service不存在!");
         }
+        return result;
     }
 
 }
