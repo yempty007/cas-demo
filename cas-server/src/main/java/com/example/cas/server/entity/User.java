@@ -1,5 +1,7 @@
 package com.example.cas.server.entity;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -9,11 +11,12 @@ import java.time.LocalDateTime;
  * @Date 2020/8/31 15:16
  */
 @Entity
+@DynamicUpdate
 @Table(name = "cas_user")
 public class User {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
     @Column
@@ -25,6 +28,24 @@ public class User {
 
     @Column(name = "create_time")
     private LocalDateTime createTime;
+
+    public User() {
+    }
+
+    public User(Long id,String username,Integer locked,LocalDateTime createTime) {
+        this.id=id;
+        this.username=username;
+        this.locked=locked;
+        this.createTime=createTime;
+    }
+
+    public User(Long id,String username,String password,Integer locked,LocalDateTime createTime) {
+        this.id=id;
+        this.username=username;
+        this.password=password;
+        this.locked=locked;
+        this.createTime=createTime;
+    }
 
     public Long getId() {
         return id;

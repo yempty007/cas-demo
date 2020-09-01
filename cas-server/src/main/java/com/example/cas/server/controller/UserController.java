@@ -8,11 +8,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * @Description UserController
+ * @Description 用户管理控制器
  * @Author yempty
  * @Date 2020/8/31 14:59
  */
-@RequestMapping("users")
+@RequestMapping("/api/users")
 @RestController
 public class UserController {
 

@@ -1,22 +1,29 @@
 package com.example.cas.server.controller;
 
+import cn.hutool.core.util.IdUtil;
 import com.example.cas.server.common.result.Result;
-import org.apereo.cas.services.*;
+import com.example.cas.server.dto.ServiceDTO;
+import org.apereo.cas.services.RegexRegisteredService;
+import org.apereo.cas.services.RegisteredService;
+import org.apereo.cas.services.ReturnAllAttributeReleasePolicy;
+import org.apereo.cas.services.ServicesManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URL;
+import java.util.OptionalInt;
 
 /**
- * @Description ServiceController
+ * @Description 服务管理控制器
  * @Author yempty
  * @Date 2020/8/26 13:24
  */
 @RestController
-@RequestMapping("services")
+@RequestMapping("/api/services")
 public class ServiceController {
 
     private Logger logger = LoggerFactory.getLogger(ServiceController.class);
@@ -28,43 +35,37 @@ public class ServiceController {
     /**
      * 注册service
      *
-     * @param serviceId 服务ID
-     * @param id        序号
+     * @param serviceDTO 服务DTO
      * @return
      */
-    @PostMapping("/{protocol}/{serviceId}/{id}")
-    public Result<String> addClient(@PathVariable("protocol") String protocol,
-                                    @PathVariable("serviceId") String serviceId,
-                                    @PathVariable("id") int id) {
+    @PostMapping
+    public Result<String> addClient(@RequestBody @Valid ServiceDTO serviceDTO) {
         Result<String> result = null;
-        String url = protocol + "://" + serviceId;
-        RegisteredService svc = servicesManager.findServiceBy(url);
-        if (svc != null) {
-            logger.error("注册service异常,此地址已注册");
+        RegisteredService registeredService = servicesManager.findServiceBy(serviceDTO.getAddress());
+        if (registeredService != null) {
+            logger.error("注册service失败,此地址[{}]已注册", serviceDTO.getAddress());
             result = Result.error("添加服务失败!此地址已注册!");
         } else {
             try {
-                String realServiceId = "^" + url + ".*";
                 RegexRegisteredService service = new RegexRegisteredService();
-
                 ReturnAllAttributeReleasePolicy policy = new ReturnAllAttributeReleasePolicy();
                 service.setAttributeReleasePolicy(policy);
-                // 允许返回字段
-                // ReturnAllowedAttributeReleasePolicy policy = new ReturnAllowedAttributeReleasePolicy();
-                // List<String> attributes = new ArrayList<>();
-                // attributes.add("id");
-                // attributes.add("create_time");
-                // policy.setAllowedAttributes(attributes);
-                RegisteredServicePublicKey publicKey = new RegisteredServicePublicKeyImpl("E:\\public.txt", "RSA");
-                service.setPublicKey(publicKey);
-                service.setAttributeReleasePolicy(policy);
-                service.setServiceId(realServiceId);
+
+                long id = IdUtil.createSnowflake(0, 0).nextId();
                 service.setId(id);
-                service.setName(url);
-                // 这个是为了单点登出
-                service.setLogoutUrl(new URL(url));
+
+                String serviceId = "^(https|http)://" + serviceDTO.getAddress() + "/.*";
+                service.setServiceId(serviceId);
+
+                service.setName(serviceDTO.getName());
+                service.setDescription(serviceDTO.getDescription());
+                service.setLogo(serviceDTO.getLogo());
+                service.setEvaluationOrder(OptionalInt.of(serviceDTO.getEvaluationOrder()).orElse(1));
+                service.setLogoutUrl(new URL(serviceDTO.getLogoutUrl()));
+
                 servicesManager.save(service);
-                // 执行load让他生效
+
+                // 执行load立即生效
                 servicesManager.load();
 
                 result = Result.okMsg("添加服务成功!");

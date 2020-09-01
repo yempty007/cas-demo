@@ -1,5 +1,7 @@
 package com.example.cas.server.dto;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 /**
  * @Description service实体类
  * guide: https://apereo.github.io/cas/5.3.x/installation/Service-Management.html#service-management
@@ -10,58 +12,79 @@ package com.example.cas.server.dto;
 public class ServiceDTO {
 
     /**
-     * 必需的唯一标识符。该值必须是有效的数值
-     */
-    private String id;
-    /**
      * 必填名称（255字符或更少）
      */
+    @NotBlank(message = "名称必须填写")
     private String name;
     /**
      * 服务的可选自由文本描述。（个255字符以内）
      */
     private String description;
     /**
-     * 服务信息指南的可选自由文本链接
-     */
-    private String informationUrl;
-    /**
-     * 可选的自由文本链接，指向服务隐私政策
-     */
-    private String privacyUrl;
-    /**
      * logo地址
      */
     private String logo;
     /**
-     * 描述逻辑服务的必需正则表达式
-     * 逻辑服务定义一个或多个服务所在的一个或多个URL
+     * 客户端系统的访问地址，不带协议，带端口
      */
-    private String serviceId;
+    @NotBlank(message = "客户端系统的访问地址，不带协议，带端口(例：192.168.1.150:8080,www.baidu.com)")
+    private String address;
     /**
      * 确定注册服务评估的相对顺序
      * 在两个服务URL表达式包含相同服务的情况下，此标志尤其重要。评估顺序确定首先评估哪个注册并充当内部排序因素
      */
     private Integer evaluationOrder;
     /**
-     * 定义启动注销协议后应如何处理此服务。可接受值LogoutType.BACK_CHANNEL，LogoutType.FRONT_CHANNEL或LogoutType.NONE
-     */
-    private String logoutType;
-    /**
-     * 定义CAS应如何响应对此服务的请求
-     */
-    private String responseType;
-    /**
-     * 与该服务关联的公共密钥，用于通过加密CAS验证协议响应中的某些元素和属性（例如PGT或凭据）来授权请求
-     */
-    private String publicKey;
-    /**
      * 该服务接收注销请求的URL端点
      */
+    @NotBlank(message = "该服务接收注销请求的URL端点")
     private String logoutUrl;
-    /**
-     * 指定与拥有该应用程序的服务相关联的联系人集合
-     */
-    private String contacts;
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public Integer getEvaluationOrder() {
+        return evaluationOrder;
+    }
+
+    public void setEvaluationOrder(Integer evaluationOrder) {
+        this.evaluationOrder = evaluationOrder;
+    }
+
+    public String getLogoutUrl() {
+        return logoutUrl;
+    }
+
+    public void setLogoutUrl(String logoutUrl) {
+        this.logoutUrl = logoutUrl;
+    }
 }

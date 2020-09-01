@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+
+    <title>Login Form Fragment</title>
+
+    <link rel="stylesheet" href="./css/newCas.css"/>
+
+    <script type="application/javascript" src="./js/md5.min.js"></script>
+
+</head>
+<body>
+<main role="main">
+    <!-- Login form template begins here -->
+    <div th:fragment="loginform" class="login-box">
+        <div><img src="./images/login_user.png"></div>
+        <p class="login-title">用户登录</p>
+        <form class="login-form" method="post" id="loginForm" th:object="${credential}" action="login">
+
+            <div class="login-form-danger" th:if="${#fields.hasErrors('*')}">
+                <span th:each="err : ${#fields.errors('*')}" th:utext="${err}">Example error</span>
+            </div>
+
+            <div class="login-form-danger" id="loginError"></div>
+
+            <p>
+                <img class="login-icon" src="./images/login_icon1.png">
+                <input type="text" id="username" name="username" class="banner-login" placeholder="请输入用户名...">
+            </p>
+
+            <p>
+                <img class="login-icon" src="./images/login_icon2.png">
+                <input type="password" id="password" name="password" class="banner-login"
+                       placeholder="请输入密码...">
+            </p>
+
+            <input type="hidden" name="execution" th:value="${flowExecutionKey}"/>
+            <input type="hidden" name="_eventId" value="submit"/>
+            <input type="hidden" name="geolocation"/>
+
+            <p>
+                <input type="submit" value="登录">
+            </p>
+        </form>
+
+
+        <script type="text/javascript" th:inline="javascript">
+          var i = [[#{screen.welcome.button.loginwip}]]
+          $(document).ready(function () {
+            $('#loginForm').submit(function () {
+              let username = $('#username').val()
+              let password = $('#password').val()
+              if( username === '' || password === ''){
+                  $('#loginError').html("<span>用户名和密码不能为空</span>")
+                  return false
+              }
+
+              $(':submit').attr('disabled', true)
+              $(':submit').attr('value', i)
+              $('#loginError').html('')
+              return true
+            })
+          })
+        </script>
+
+        <div th:replace="fragments/loginsidebar :: loginsidebar"/>
+    </div>
+</main>
+</body>
+</html>

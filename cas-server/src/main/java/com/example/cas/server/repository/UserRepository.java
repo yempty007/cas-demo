@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @Description UserRepository
@@ -21,7 +22,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @param username 用户名
      * @return
      */
-    @Query("select id,username,locked,createTime from User where username=:username")
+    @Query("select new User(id,username,locked,createTime) from User where username=:username")
     User findByUsername(@Param("username") String username);
 
     /**
@@ -30,6 +31,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @param id     ID
      * @param status 状态值
      */
+    @Transactional(rollbackFor = Exception.class)
     @Modifying
     @Query("update User set locked=:status where id=:id")
     void changeLockedStatus(@Param("id") Long id, @Param("status") Integer status);

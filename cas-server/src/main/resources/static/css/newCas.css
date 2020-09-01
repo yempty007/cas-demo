@@ -1,0 +1,202 @@
+html, body
+{
+    margin: 0;
+    height: 100%;
+}
+p {
+    margin: 0;
+}
+.iframeHead{
+    box-shadow: -6.709px 4.357px 12px 0px rgba(0, 0, 0, 0.1);
+    height: 76px;
+    background-color: rgb(255,255,255)
+}
+.iframeFoot{
+    height: 40px;
+    position: absolute;
+    bottom: 20px;
+    background: transparent;
+}
+.foot-text{
+    font-size: 12px;
+    color: rgba(107, 118, 132, 0.6);
+    line-height: 1.2;
+    text-align: center;
+}
+
+.login-container {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-image: url(../images/bg.png);
+    background-size: cover;
+}
+
+.login-view {
+    margin-top: 90px;
+    display: flex;
+    position: relative;
+    left: -100px;
+}
+
+.login-box {
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.15);
+    width: 400px;
+    height: 590px;
+    display: inline-block;
+    padding: 40px 50px 30px;
+    box-sizing: border-box;
+    vertical-align: top;
+    text-align: center;
+}
+
+.login-title {
+    font-size: 18px;
+    color: rgb(107, 118, 132);
+    font-weight: bold;
+    line-height: 2.667;
+    text-align: justifyLeft;
+    margin: 0;
+}
+
+.login-form{
+    position: relative;
+}
+
+.login-form-danger{
+    font-size: 12px;
+    color: red;
+    position: absolute;
+    width: 100%;
+}
+
+.login-form input {
+    border: none;
+    font-size: 14px;
+    outline: none;
+}
+
+.login-form input[type="text"],
+.login-form input[type="password"] {
+    height: 40px;
+    border-bottom: 1px solid rgba(220, 223, 230, 0.502);
+    width: 100%;
+    text-indent: 35px;
+    color: rgba(107, 118, 132, 0.502);
+}
+
+.login-form input[type="text"]:focus,
+.login-form input[type="password"]:focus {
+    outline: none;
+}
+
+.login-form input[type="submit"] {
+    border-radius: 3px;
+    background-color: rgb(6, 118, 255);
+    width: 300px;
+    height: 36px;
+    font-size: 14px;
+    color: rgb(255, 255, 255);
+    margin: 20px 0 30px;
+    cursor: pointer;
+}
+
+.login-icon {
+    position: relative;
+    top: 27px;
+    left: 13px;
+    float: left;
+}
+
+.login-tips {
+    font-size: 12px;
+    color: rgb(107, 118, 132);
+    line-height: 1.5;
+    text-align: left;
+}
+
+.login-tips a {
+    color: rgb(6, 118, 255);
+    cursor: pointer;
+    padding: 0 5px;
+}
+
+.login-client {
+    border-top: 1px solid rgba(220, 223, 230, 0.502);
+    margin-top: 30px;
+    padding-top: 20px;
+    position: relative;
+    width: 400px;
+    left: 37px;
+    top: -178px;
+    float: right;
+    text-align: center;
+}
+
+.login-client p {
+    color: rgba(107, 118, 132, 0.502);
+    line-height: 1.2;
+    font-size: 14px;
+}
+
+.login-client p:nth-child(2) {
+    font-size: 18px;
+    color: rgb(107, 118, 132);
+    font-weight: bold;
+    line-height: 2;
+}
+
+.login-client p:nth-child(3){
+    text-align: justify;
+    padding: 0 20px;
+    text-overflow: -o-ellipsis-lastline;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.logout-view {
+    text-align: center;
+    margin-top: 90px;
+}
+
+.logout-view p {
+    font-size: 14px;
+    color: rgb(107, 118, 132);
+    line-height: 1.714;
+    text-align: center;
+}
+
+.logout-view p:nth-child(2) {
+    font-size: 16px;
+    color: rgb(17, 201, 135);
+    font-weight: bold;
+    line-height: 3;
+    text-align: justifyLeft;
+}
+
+.disable-view {
+    text-align: center;
+    margin-top: 90px;
+}
+
+.disable-view p {
+    font-size: 14px;
+    color: rgb(107, 118, 132);
+    line-height: 1.714;
+    text-align: center;
+    margin: 0 auto;
+}
+
+.disable-view p:nth-child(2) {
+    font-size: 16px;
+    color: rgb(255, 85, 85);
+    font-weight: bold;
+    line-height: 3;
+    text-align: justifyLeft;
+}
+
