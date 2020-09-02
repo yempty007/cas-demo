@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -58,7 +59,8 @@ public class UserServiceImpl implements UserService {
             throw new GlobalException("新增失败,此用户名已被注册使用.");
         }
         User user = ConvertUtil.sourceToTarget(dto, User.class);
-
+        user.setLocked(LockedStatusEnum.UN_LOCKED.getValue());
+        user.setCreateTime(LocalDateTime.now());
         String encodePassword = passwordEncoder.encode(dto.getPassword());
         user.setPassword(encodePassword);
         userRepository.save(user);

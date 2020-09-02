@@ -80,25 +80,30 @@ public class ServiceController {
     /**
      * 删除service
      *
-     * @param serviceId 服务ID
+     * @param serviceDTO 服务DTO
      * @return
      */
-    @DeleteMapping("/{serviceId}")
-    public Result<String> deleteClient(@PathVariable("serviceId") String serviceId) {
+    @DeleteMapping
+    public Result<String> deleteClient(@RequestBody ServiceDTO serviceDTO) {
 
-        Result<String> result = null;
+        Result<String> result =  result = Result.okMsg("删除service成功!");
 
-        RegisteredService service = servicesManager.findServiceBy(serviceId);
+        RegisteredService service = servicesManager.findServiceBy(serviceDTO.getAddress());
         if (service != null) {
             try {
                 servicesManager.delete(service);
                 // 执行load生效
                 servicesManager.load();
 
-                result = Result.error("删除service成功!");
             } catch (Exception e) {
-                logger.error("删除service异常", e);
-                result = Result.error("删除service异常!");
+                // 会抛出审计的异常，delete 方法Audit注解的配置没实现
+                // 再查一次，如果有被正常删除就行
+                service = servicesManager.findServiceBy(serviceDTO.getAddress());
+                if (service != null) {
+                    logger.error("删除service异常", e);
+                    result = Result.error("删除service异常!");
+                }
+
             }
         } else {
             result = Result.error("删除service失败!service不存在!");

@@ -59,7 +59,6 @@ public class AuthenticationFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-
         String uri = request.getRequestURI();
         if (needCheck(uri)) {
             // check authentication
@@ -71,7 +70,11 @@ public class AuthenticationFilter implements Filter {
             } else {
                 tgc = request.getHeader("TGC");
             }
+            if(StrUtil.isBlank(tgc)){
+                throw new GlobalException(ResultCode.FORBIDDEN);
+            }
 
+            // split '@' can get ip,user-agent...
             String tgt = (String) cipherExecutor.decode(tgc, null);
             tgt = StrUtil.subBefore(tgt, "@", false);
 
